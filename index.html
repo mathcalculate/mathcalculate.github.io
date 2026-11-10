@@ -218,6 +218,24 @@
     return tokens;
   }
 
+  function addQueryParam(userInput, key, value) {
+    let formattedUrl = userInput.trim();
+    if (!/^https?:\/\//i.test(formattedUrl)) {
+      formattedUrl = 'https://' + formattedUrl;
+    }
+
+    // Parse the URL safely
+    const urlObj = new URL(formattedUrl);
+
+    // .set() adds 'a=b' if missing, or updates 'a' if it already exists
+    urlObj.searchParams.set(key, value);
+
+    const finalUrl = urlObj.toString();
+
+    // Open the updated URL in a new tab securely
+    window.open(finalUrl, '_blank', 'noopener,noreferrer');
+  }
+  
   function evaluate(str, mode){
     var tokens = tokenize(str), pos = 0;
     function peek(){ return tokens[pos]; }
@@ -293,7 +311,7 @@
   }
   function onEquals(){
     if (state.secretMode){
-      console.log("test");
+      addQueryParam(exprEl.textContent, zz, math)
       state.secretMode = false;
       return;
     }
